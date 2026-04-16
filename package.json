@@ -1,38 +1,45 @@
 {
-  "name": "Dig-notice-backend",
+  "name": "dig-notice-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Digital Notice Board Backend API",
+  "main": "dist/frameworks/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only src/frameworks/server.ts",
+    "build": "tsc",
+    "start": "node dist/frameworks/server.js",
+    "seed": "ts-node -r tsconfig-paths/register src/scripts/seed.ts",
+    "start:clean": "taskkill /F /IM node.exe /T 2>nul & timeout /t 2 /nobreak >nul & npm run dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.15.1",
   "dependencies": {
-    "bcryptjs": "^3.0.3",
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
-    "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3",
-    "morgan": "^1.10.1",
-    "multer": "^2.1.1",
-    "pg": "^8.20.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^8.0.5",
+    "pg": "^8.13.1",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.28",
-    "winston": "^3.19.0"
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typeorm": "^0.3.20",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^3.0.0",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.6",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/morgan": "^1.9.10",
-    "@types/multer": "^2.1.0",
-    "@types/node": "^25.6.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/morgan": "^1.9.9",
+    "@types/multer": "^1.4.12",
+    "@types/node": "^22.9.0",
+    "@types/nodemailer": "^8.0.0",
     "ts-node-dev": "^2.0.0",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^6.0.2"
+    "typescript": "^5.6.3"
   }
 }

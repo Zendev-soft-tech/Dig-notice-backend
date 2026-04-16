@@ -45,3 +45,6 @@ debug-output.txt
 *.tsbuildinfo
 next-env.d.ts
  
+# application data
+/uploads
+/logs
