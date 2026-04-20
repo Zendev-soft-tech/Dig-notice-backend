@@ -36,6 +36,14 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  // Handle TypeORM duplicate key (PostgreSQL error code 23505)
+  if (err.name === "QueryFailedError" && (err as any).code === "23505") {
+    return res.status(409).json({
+      ok: false,
+      error: "A user with this email or username already exists.",
+    } as FailureResponse);
+  }
+
   const statusCode = err.statusCode || 500;
   const message = err.isOperational ? err.message : "Internal Server Error";
 

@@ -9,4 +9,6 @@ export interface INoticeRepository {
   findByDepartment(department: string, currentDate: string): Promise<Notice[]>;
   findByAcademicProfile(department: string, semester: string, currentDate: string): Promise<Notice[]>;
   findByAuthor(authorId: string): Promise<Notice[]>;
+  getDistinctDepartments(): Promise<string[]>;
+  getDistinctTypes(): Promise<string[]>;
 }

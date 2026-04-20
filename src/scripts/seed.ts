@@ -25,44 +25,15 @@ const seedData = async () => {
     };
 
     let admin = await userRepo.findOneBy({ username: adminData.username });
+    const hashedPassword = await bcrypt.hash(adminData.password, 10);
+
     if (!admin) {
-      const hashedPassword = await bcrypt.hash(adminData.password, 10);
       admin = await userRepo.save(userRepo.create({ ...adminData, password: hashedPassword }));
       Logger.info(`✅ Admin user ${adminData.username} created`);
-    }
-
-    // 2. Seed Staff
-    const staffData = {
-      username: 'STAFF001',
-      password: 'staff123',
-      name: 'Prof. Sarah Wilson',
-      role: 'staff' as const,
-      department: 'Computer Science',
-      email: 'sarah.cs@college.edu'
-    };
-
-    let staff = await userRepo.findOneBy({ username: staffData.username });
-    if (!staff) {
-      const hashedPassword = await bcrypt.hash(staffData.password, 10);
-      staff = await userRepo.save(userRepo.create({ ...staffData, password: hashedPassword }));
-      Logger.info(`✅ Staff user ${staffData.username} created`);
-    }
-
-    // 3. Seed Student
-    const studentData = {
-      username: 'STUD001',
-      password: 'student123',
-      name: 'John Doe',
-      role: 'student' as const,
-      department: 'Computer Science',
-      email: 'john.doe@college.edu'
-    };
-
-    let student = await userRepo.findOneBy({ username: studentData.username });
-    if (!student) {
-      const hashedPassword = await bcrypt.hash(studentData.password, 10);
-      student = await userRepo.save(userRepo.create({ ...studentData, password: hashedPassword }));
-      Logger.info(`✅ Student user ${studentData.username} created`);
+    } else {
+      admin.password = hashedPassword;
+      await userRepo.save(admin);
+      Logger.info(`✅ Admin user ${adminData.username} password synced`);
     }
 
     // 4. Seed Notice

@@ -8,6 +8,4 @@ export interface IUserRepository {
   update(id: string, userData: Partial<User>): Promise<void>;
   delete(id: string): Promise<void>;
   findAll(): Promise<User[]>;
-  updateOTP(userId: string, otp: string, expires: Date): Promise<void>;
-  clearOTP(userId: string): Promise<void>;
 }

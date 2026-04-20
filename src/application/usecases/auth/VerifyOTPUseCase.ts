@@ -1,5 +1,6 @@
 import { IUserRepository } from "../../../application/interfaces/IUserRepository";
 import { BadRequestError, NotFoundError } from "../../../shared/error";
+import { OTPStore } from "../../../shared/OTPStore";
 
 export class VerifyOTPUseCase {
   constructor(private userRepository: IUserRepository) {}
@@ -10,15 +11,11 @@ export class VerifyOTPUseCase {
       throw new NotFoundError("User not found");
     }
 
-    if (!user.otp || user.otp !== otp) {
-      throw new BadRequestError("Invalid OTP");
+    const isValid = OTPStore.verifyOTP(email, otp);
+    if (!isValid) {
+      throw new BadRequestError("Invalid or expired OTP");
     }
 
-    if (!user.otpExpires || user.otpExpires < new Date()) {
-      throw new BadRequestError("OTP has expired");
-    }
-
-    // Success, we could return a temporary token or just success
     return { success: true, message: "OTP verified" };
   }
 }

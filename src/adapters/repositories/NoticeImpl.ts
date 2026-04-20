@@ -72,4 +72,20 @@ export class NoticeImpl implements INoticeRepository {
       order: { createdAt: "DESC" },
     });
   }
+
+  async getDistinctDepartments(): Promise<string[]> {
+    const results = await this.repository
+      .createQueryBuilder("notice")
+      .select("DISTINCT notice.department", "department")
+      .getRawMany();
+    return results.map((r) => r.department).filter(Boolean);
+  }
+
+  async getDistinctTypes(): Promise<string[]> {
+    const results = await this.repository
+      .createQueryBuilder("notice")
+      .select("DISTINCT notice.type", "type")
+      .getRawMany();
+    return results.map((r) => r.type).filter(Boolean);
+  }
 }
