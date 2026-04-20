@@ -16,8 +16,8 @@ export class CreateUserUseCase {
 
     const result = await this.userRepository.create(userData);
 
-    // Send welcome email strictly for staff and students
-    if (result.role === "staff" || result.role === "student") {
+    // Send welcome email for admin, staff and students
+    if (result.role === "admin" || result.role === "staff" || result.role === "student") {
       await sendWelcomeInvite(result.email, result.name, tempPassword);
     }
 

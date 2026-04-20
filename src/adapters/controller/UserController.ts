@@ -8,6 +8,7 @@ import { UpdateUserUseCase } from "../../application/usecases/users/UpdateUserUs
 import { DeleteUserUseCase } from "../../application/usecases/users/DeleteUserUseCase";
 import { GetProfileUseCase } from "../../application/usecases/users/GetProfileUseCase";
 import { UpdateProfileUseCase } from "../../application/usecases/users/UpdateProfileUseCase";
+import { BulkCreateUserUseCase } from "../../application/usecases/users/BulkCreateUserUseCase";
 import { SuccessResponse } from "../../frameworks/types";
 import { authMiddleware, roleMiddleware } from "../../frameworks/middleware";
 
@@ -24,6 +25,7 @@ export class UserController {
 
     // Admin-only user management routes
     this.router.get("/", authMiddleware, roleMiddleware(["admin"]), this.getAllUsersHandler.bind(this));
+    this.router.post("/bulk", authMiddleware, roleMiddleware(["admin"]), this.bulkCreateUserHandler.bind(this));
     this.router.get("/:id", authMiddleware, roleMiddleware(["admin"]), this.getUserByIdHandler.bind(this));
     this.router.post("/", authMiddleware, roleMiddleware(["admin"]), this.createUserHandler.bind(this));
     this.router.put("/:id", authMiddleware, roleMiddleware(["admin"]), this.updateUserHandler.bind(this));
@@ -97,6 +99,26 @@ export class UserController {
         ok: true,
         data: result,
         message: "User created successfully"
+      } as SuccessResponse<typeof result>);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async bulkCreateUserHandler(req: Request, res: Response, next: any) {
+    try {
+      const usersData = req.body;
+      if (!Array.isArray(usersData)) {
+        return res.status(400).json({ ok: false, message: "Expected an array of users" });
+      }
+
+      const usecase = new BulkCreateUserUseCase(this.userRepository);
+      const result = await usecase.execute(usersData);
+
+      res.status(201).json({
+        ok: true,
+        data: result,
+        message: `Bulk creation completed: ${result.successful} successful, ${result.failed} failed.`
       } as SuccessResponse<typeof result>);
     } catch (error) {
       next(error);

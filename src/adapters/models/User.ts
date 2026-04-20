@@ -30,10 +30,12 @@ export class User {
   email!: string;
 
   @Column({ nullable: true })
-  otp?: string;
+  registerNumber?: string;
 
-  @Column({ type: "timestamp", nullable: true })
-  otpExpires?: Date;
+  @Column({ nullable: true })
+  semester?: string;
+
+
 
   @CreateDateColumn()
   createdAt!: Date;

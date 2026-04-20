@@ -38,11 +38,4 @@ export class UserImpl implements IUserRepository {
     return this.repository.find();
   }
 
-  async updateOTP(userId: string, otp: string, expires: Date): Promise<void> {
-    await this.repository.update(userId, { otp, otpExpires: expires });
-  }
-
-  async clearOTP(userId: string): Promise<void> {
-    await this.repository.update(userId, { otp: undefined, otpExpires: undefined });
-  }
 }

@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import { IUserRepository } from "../../../application/interfaces/IUserRepository";
 import { BadRequestError, NotFoundError } from "../../../shared/error";
+import { OTPStore } from "../../../shared/OTPStore";
 
 export class UpdatePasswordUseCase {
   constructor(private userRepository: IUserRepository) {}
@@ -11,17 +12,17 @@ export class UpdatePasswordUseCase {
       throw new NotFoundError("User not found");
     }
 
-    // Double check OTP in this step to ensure security
-    if (!user.otp || user.otp !== otp || !user.otpExpires || user.otpExpires < new Date()) {
+    const isValid = OTPStore.verifyOTP(email, otp);
+    if (!isValid) {
       throw new BadRequestError("Invalid or expired OTP");
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     await this.userRepository.update(user.id, { 
-      password: hashedPassword,
-      otp: undefined,
-      otpExpires: undefined
+      password: hashedPassword
     });
+
+    OTPStore.clearOTP(email);
 
     return { message: "Password updated successfully" };
   }

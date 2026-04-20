@@ -9,7 +9,7 @@ export class GetProfileUseCase {
     if (!user) throw new NotFoundError("User not found");
     
     // Remove sensitive data
-    const { password, otp, otpExpires, ...profile } = user;
+    const { password, ...profile } = user;
     return profile;
   }
 }

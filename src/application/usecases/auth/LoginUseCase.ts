@@ -21,7 +21,7 @@ export class LoginUseCase {
     }
 
     const token = jwt.sign(
-      { id: user.id, username: user.username, role: user.role },
+      { id: user.id, username: user.username, name: user.name, role: user.role },
       config.jwt.secret,
       { expiresIn: config.jwt.expiresIn as any }
     );

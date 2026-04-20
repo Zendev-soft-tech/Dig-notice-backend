@@ -2,6 +2,8 @@ import { IUserRepository } from "../../../application/interfaces/IUserRepository
 import { NotFoundError } from "../../../shared/error";
 import { Logger } from "../../../shared/logger";
 import { config } from "../../../config";
+import { OTPStore } from "../../../shared/OTPStore";
+import { sendOTPEmail } from "../../../infrastructure/emailService";
 
 export class ForgotPasswordUseCase {
   constructor(private userRepository: IUserRepository) {}
@@ -17,10 +19,12 @@ export class ForgotPasswordUseCase {
     const expiry = new Date();
     expiry.setMinutes(expiry.getMinutes() + config.otpExpiryMinutes);
 
-    await this.userRepository.updateOTP(user.id, otp, expiry);
+    OTPStore.setOTP(email, otp, expiry);
 
-    // In a real app, send email here. For now, log it.
-    Logger.info(`[FORGOT_PASSWORD] OTP for ${email}: ${otp} (Expires in ${config.otpExpiryMinutes} mins)`);
+    // Send email
+    await sendOTPEmail(email, otp);
+
+    Logger.info(`[FORGOT_PASSWORD] OTP email sent for ${email}`);
 
     return { message: "OTP sent to your email" };
   }
