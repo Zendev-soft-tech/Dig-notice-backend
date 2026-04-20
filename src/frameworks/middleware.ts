@@ -51,7 +51,7 @@ export const errorHandler = (
     Logger.error(`[ERROR] ${err.stack}`);
   }
 
-  res.status(statusCode).json({
+  return res.status(statusCode).json({
     ok: false,
     error: message,
   } as FailureResponse);

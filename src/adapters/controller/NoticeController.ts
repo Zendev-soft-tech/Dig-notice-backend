@@ -127,7 +127,7 @@ export class NoticeController {
         message: "Notice created successfully",
       });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 
@@ -162,7 +162,7 @@ export class NoticeController {
           message: "Notice updated successfully",
         });
       } catch (error) {
-        next(error);
+        return next(error);
       }
     }
 
@@ -186,7 +186,7 @@ export class NoticeController {
         message: "Notice deleted successfully",
       });
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 }

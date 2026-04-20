@@ -121,7 +121,7 @@ export class UserController {
         message: `Bulk creation completed: ${result.successful} successful, ${result.failed} failed.`
       } as SuccessResponse<typeof result>);
     } catch (error) {
-      next(error);
+      return next(error);
     }
   }
 
