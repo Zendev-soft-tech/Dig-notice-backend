@@ -78,7 +78,7 @@ export class NoticeImpl implements INoticeRepository {
       .createQueryBuilder("notice")
       .select("DISTINCT notice.department", "department")
       .getRawMany();
-    return results.map((r) => r.department).filter(Boolean);
+    return results.map((r: { department: string }) => r.department).filter(Boolean);
   }
 
   async getDistinctTypes(): Promise<string[]> {
@@ -86,6 +86,6 @@ export class NoticeImpl implements INoticeRepository {
       .createQueryBuilder("notice")
       .select("DISTINCT notice.type", "type")
       .getRawMany();
-    return results.map((r) => r.type).filter(Boolean);
+    return results.map((r: { type: string }) => r.type).filter(Boolean);
   }
 }
