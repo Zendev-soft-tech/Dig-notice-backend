@@ -6,6 +6,7 @@ export default (): AppConfig => {
   return {
     port: Number(process.env.PORT),
     env: process.env.NODE_ENV as string,
+    frontendUrl: process.env.FRONTEND_URL || process.env.LOGIN_URL || 'https://digital-notice-board-8f09a.web.app',
     jwt: {
       secret: process.env.JWT_SECRET as string,
       expiresIn: process.env.JWT_EXPIRE as string,
