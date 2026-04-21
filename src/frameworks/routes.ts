@@ -1,4 +1,4 @@
-import { Express } from "express";
+import { Express, Request, Response } from "express";
 import { AuthController } from "../adapters/controller/AuthController";
 import { UserController } from "../adapters/controller/UserController";
 import { Logger } from "../shared/logger";
@@ -15,8 +15,4 @@ export default (app: Express) => {
 
   Logger.info("✅ Routes registered successfully");
 
-  // Health check route
-  app.get("/health", (req, res) => {
-    res.status(200).json({ ok: true, message: "Server is healthy" });
-  });
 };
