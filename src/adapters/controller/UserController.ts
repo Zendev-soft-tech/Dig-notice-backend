@@ -9,6 +9,7 @@ import { DeleteUserUseCase } from "../../application/usecases/users/DeleteUserUs
 import { GetProfileUseCase } from "../../application/usecases/users/GetProfileUseCase";
 import { UpdateProfileUseCase } from "../../application/usecases/users/UpdateProfileUseCase";
 import { BulkCreateUserUseCase } from "../../application/usecases/users/BulkCreateUserUseCase";
+import { GetNextIdUseCase } from "../../application/usecases/users/GetNextIdUseCase";
 import { SuccessResponse } from "../../frameworks/types";
 import { authMiddleware, roleMiddleware } from "../../frameworks/middleware";
 
@@ -29,6 +30,7 @@ export class UserController {
     this.router.get("/:id", authMiddleware, roleMiddleware(["admin"]), this.getUserByIdHandler.bind(this));
     this.router.post("/", authMiddleware, roleMiddleware(["admin"]), this.createUserHandler.bind(this));
     this.router.put("/:id", authMiddleware, roleMiddleware(["admin"]), this.updateUserHandler.bind(this));
+    this.router.get("/next-id/:role", authMiddleware, roleMiddleware(["admin"]), this.getNextIdHandler.bind(this));
     this.router.delete("/:id", authMiddleware, roleMiddleware(["admin"]), this.deleteUserHandler.bind(this));
   }
 
@@ -152,6 +154,21 @@ export class UserController {
         data: { id },
         message: "User deleted successfully"
       } as SuccessResponse<any>);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getNextIdHandler(req: Request, res: Response, next: any) {
+    try {
+      const { role } = req.params;
+      const usecase = new GetNextIdUseCase(this.userRepository);
+      const result = await usecase.execute(role);
+
+      res.status(200).json({
+        ok: true,
+        data: result,
+      } as SuccessResponse<string>);
     } catch (error) {
       next(error);
     }

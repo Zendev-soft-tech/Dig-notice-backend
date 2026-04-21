@@ -8,4 +8,5 @@ export interface IUserRepository {
   update(id: string, userData: Partial<User>): Promise<void>;
   delete(id: string): Promise<void>;
   findAll(): Promise<User[]>;
+  findMaxId(role: string): Promise<string | null>;
 }

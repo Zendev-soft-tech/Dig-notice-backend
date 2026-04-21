@@ -38,9 +38,18 @@ export const errorHandler = (
 ) => {
   // Handle TypeORM duplicate key (PostgreSQL error code 23505)
   if (err.name === "QueryFailedError" && (err as any).code === "23505") {
+    const detail = (err as any).detail || "";
+    let message = "A user with this email or username already exists.";
+    
+    if (detail.includes("username")) {
+      message = "A user with this username already exists.";
+    } else if (detail.includes("email")) {
+      message = "A user with this email address already exists.";
+    }
+
     return res.status(409).json({
       ok: false,
-      error: "A user with this email or username already exists.",
+      error: message,
     } as FailureResponse);
   }
 

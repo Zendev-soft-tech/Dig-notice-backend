@@ -31,11 +31,23 @@ export class UserImpl implements IUserRepository {
   }
 
   async delete(id: string): Promise<void> {
-    await this.repository.delete(id);
+    await this.repository.softDelete(id);
   }
 
   async findAll(): Promise<User[]> {
     return this.repository.find();
   }
 
+  async findMaxId(role: string): Promise<string | null> {
+    const prefix = role === 'admin' ? 'ADMIN' : role === 'staff' ? 'STAFF' : 'STUD';
+    
+    // Query including soft-deleted users to find the true max ID
+    const latestUser = await this.repository.findOne({
+      where: { role: role as any },
+      order: { username: 'DESC' },
+      withDeleted: true
+    });
+
+    return latestUser ? latestUser.username : null;
+  }
 }
