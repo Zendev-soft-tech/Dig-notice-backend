@@ -25,6 +25,9 @@ export class ForgotPasswordUseCase {
 
     Logger.info(`[FORGOT_PASSWORD] OTP email sent for ${email}`);
 
-    return { message: "OTP sent to your email" };
+    return { 
+      message: "OTP sent to your email",
+      expiryMinutes: config.otpExpiryMinutes
+    };
   }
 }

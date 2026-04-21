@@ -50,4 +50,13 @@ export class UserImpl implements IUserRepository {
 
     return latestUser ? latestUser.username : null;
   }
+
+  async getDistinctDepartments(): Promise<string[]> {
+    const users = await this.repository.find({
+      select: ["department"],
+      where: {}
+    });
+    const depts = users.map(u => u.department).filter(Boolean);
+    return Array.from(new Set(depts));
+  }
 }
