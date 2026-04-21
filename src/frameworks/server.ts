@@ -49,6 +49,7 @@ app.use(
       if (!origin) return callback(null, true);
 
       const allowedOrigins = [
+        config.frontendUrl,
         "https://digital-notice-board-8f09a.web.app",
         "http://localhost:3000",
         "http://localhost:3001",

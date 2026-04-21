@@ -15,6 +15,7 @@ export interface DBConfig {
 export interface AppConfig {
   port: number;
   env: string;
+  frontendUrl: string;
   jwt: {
     secret: string;
     expiresIn: string;
