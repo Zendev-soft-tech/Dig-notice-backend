@@ -7,10 +7,24 @@ export class OTPStore {
 
   static verifyOTP(email: string, otp: string): boolean {
     const data = this.store.get(email);
-    if (!data) return false;
+    if (!data) {
+      console.log(`[OTPStore] No OTP found for ${email}`);
+      return false;
+    }
     
-    if (data.otp !== otp) return false;
-    if (new Date() > data.expires) return false;
+    const now = Date.now();
+    const expiryTime = data.expires.getTime();
+
+    if (data.otp !== otp) {
+      console.log(`[OTPStore] OTP mismatch for ${email}`);
+      return false;
+    }
+
+    if (now > expiryTime) {
+      console.log(`[OTPStore] OTP expired for ${email}. Now: ${new Date(now).toISOString()}, Expiry: ${data.expires.toISOString()}`);
+      this.clearOTP(email); // Strictly clear it if expired
+      return false;
+    }
     
     return true;
   }
