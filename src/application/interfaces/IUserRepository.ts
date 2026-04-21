@@ -9,4 +9,5 @@ export interface IUserRepository {
   delete(id: string): Promise<void>;
   findAll(): Promise<User[]>;
   findMaxId(role: string): Promise<string | null>;
+  getDistinctDepartments(): Promise<string[]>;
 }

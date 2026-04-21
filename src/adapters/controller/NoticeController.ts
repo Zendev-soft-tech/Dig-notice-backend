@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { NoticeImpl } from "../repositories/NoticeImpl";
+import { UserImpl } from "../repositories/UserImpl";
 import { AppDataSource } from "../../infrastructure/database";
 import { GetNoticesUseCase } from "../../application/usecases/notices/GetNoticesUseCase";
 import { GetMyNoticesUseCase } from "../../application/usecases/notices/GetMyNoticesUseCase";
@@ -14,9 +15,11 @@ import { config } from "../../config";
 export class NoticeController {
   public router: Router = Router();
   private noticeRepository: NoticeImpl;
+  private userRepository: UserImpl;
 
   constructor() {
     this.noticeRepository = new NoticeImpl(AppDataSource);
+    this.userRepository = new UserImpl(AppDataSource);
     this.initializeRoutes();
   }
 
@@ -50,10 +53,16 @@ export class NoticeController {
 
   async getDepartments(req: Request, res: Response, next: any) {
     try {
-      const result = await this.noticeRepository.getDistinctDepartments();
+      const [noticeDepts, userDepts] = await Promise.all([
+        this.noticeRepository.getDistinctDepartments(),
+        this.userRepository.getDistinctDepartments()
+      ]);
+      
+      const allDepts = Array.from(new Set([...noticeDepts, ...userDepts])).sort();
+      
       res.status(200).json({
         ok: true,
-        data: result,
+        data: allDepts,
       });
     } catch (error) {
       next(error);

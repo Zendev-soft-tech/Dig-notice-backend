@@ -74,11 +74,11 @@ export class NoticeImpl implements INoticeRepository {
   }
 
   async getDistinctDepartments(): Promise<string[]> {
-    const results = await this.repository
-      .createQueryBuilder("notice")
-      .select("DISTINCT notice.department", "department")
-      .getRawMany();
-    return results.map((r: { department: string }) => r.department).filter(Boolean);
+    const notices = await this.repository.find({
+      select: ["department"]
+    });
+    const depts = notices.map(n => n.department).filter(Boolean);
+    return Array.from(new Set(depts));
   }
 
   async getDistinctTypes(): Promise<string[]> {
