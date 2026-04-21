@@ -16,8 +16,7 @@ export class ForgotPasswordUseCase {
 
     // Generate a 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiry = new Date();
-    expiry.setMinutes(expiry.getMinutes() + config.otpExpiryMinutes);
+    const expiry = new Date(Date.now() + config.otpExpiryMinutes * 60 * 1000);
 
     OTPStore.setOTP(email, otp, expiry);
 
