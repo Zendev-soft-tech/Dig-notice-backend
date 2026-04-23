@@ -23,8 +23,13 @@ export interface AppConfig {
   db: DBConfig;
   otpExpiryMinutes: number;
   upload: {
-    path: string;
     maxSize: number;
+  };
+  supabase: {
+    url: string;
+    key: string;
+    serviceRoleKey: string;
+    bucket: string;
   };
   smtp: {
     host: string;
@@ -49,10 +54,13 @@ export class Config {
       { key: 'DB_USER', value: config.db.user },
       { key: 'DB_NAME', value: config.db.name },
       { key: 'OTP_EXPIRY_MINUTES', value: config.otpExpiryMinutes },
-      { key: 'UPLOAD_PATH', value: config.upload.path },
       { key: 'MAX_FILE_SIZE', value: config.upload.maxSize },
       { key: 'SMTP_USER', value: config.smtp.user },
       { key: 'SMTP_PASS', value: config.smtp.pass },
+      { key: 'SUPABASE_URL', value: config.supabase.url },
+      { key: 'SUPABASE_ANON_KEY', value: config.supabase.key },
+      { key: 'SUPABASE_SERVICE_ROLE_KEY', value: config.supabase.serviceRoleKey },
+      { key: 'SUPABASE_BUCKET', value: config.supabase.bucket },
     ];
 
     const missing = requiredVars
@@ -64,7 +72,7 @@ export class Config {
       Logger.error(`🛑 Process exiting due to configuration error.`);
       process.exit(1);
     }
-    
+
     Logger.info("✅ Configuration validated successfully.");
   };
 

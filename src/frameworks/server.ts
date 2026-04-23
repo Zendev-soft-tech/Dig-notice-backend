@@ -2,8 +2,6 @@ import "reflect-metadata";
 import express from "express";
 import cors from "cors";
 import morgan from "morgan";
-import path from "path";
-import fs from "fs";
 import { networkInterfaces } from "os";
 import { config, AppConfig } from "../config";
 import { initializeDataSource } from "../infrastructure/database";
@@ -73,9 +71,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-// Serve uploaded files statically
-const uploadsPath = path.resolve(process.cwd(), "uploads");
-app.use("/uploads", express.static(uploadsPath));
 
 // Custom Middleware
 app.use(loggerMiddleware);
@@ -109,11 +104,6 @@ const startHTTPServer = async (config: AppConfig) => {
     Logger.info(`💚 Health check available at http://0.0.0.0:${PORT}/health`);
   });
   
-  // Ensure uploads directory exists
-  if (!fs.existsSync(uploadsPath)) {
-    fs.mkdirSync(uploadsPath, { recursive: true });
-    Logger.info(`📁 Created uploads directory at ${uploadsPath}`);
-  }
 
   // Handle server errors
   server.on("error", (error: any) => {
