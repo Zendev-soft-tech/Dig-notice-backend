@@ -20,8 +20,13 @@ export default (): AppConfig => {
     },
     otpExpiryMinutes: Number(process.env.OTP_EXPIRY_MINUTES),
     upload: {
-      path: process.env.UPLOAD_PATH as string,
       maxSize: Number(process.env.MAX_FILE_SIZE),
+    },
+    supabase: {
+      url: process.env.SUPABASE_URL as string,
+      key: process.env.SUPABASE_ANON_KEY as string,
+      serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY as string,
+      bucket: process.env.SUPABASE_BUCKET || 'uploads',
     },
     smtp: {
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
